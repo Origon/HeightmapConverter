@@ -62,6 +62,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+**/Properties/launchSettings.json
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
@@ -72,6 +73,7 @@ StyleCopReport.xml
 # Files built by Visual Studio
 *_i.c
 *_p.c
+*_i.h
 *_h.h
 *.ilk
 *.meta
@@ -131,6 +133,9 @@ $tf/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# JustCode is a .NET coding add-in
+.JustCode
 
 # TeamCity is a build add-in
 _TeamCity*
@@ -285,6 +290,9 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+# Typescript v1 declaration files
+typings/
+
 # Visual Studio 6 build log
 *.plg
 
@@ -309,6 +317,12 @@ paket-files/
 # FAKE - F# Make
 .fake/
 
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# CodeRush
+.cr/
 # CodeRush personal settings
 .cr/personal
 
