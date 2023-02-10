@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:HeightmapConverter"
+        xmlns:edit="clr-namespace:HeightmapConverter.Editing"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Heightmap Converter &amp; Editor" Height="450" Width="800">
 
     <Window.Resources>        
         <Style TargetType="TextBox" x:Key="BrowseBox">
@@ -23,89 +24,195 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel>
-            <TextBlock Name="StatusText" DockPanel.Dock="Bottom"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel.Resources>
-                    <Style TargetType="Button">
-                        <Setter Property="Margin" Value="4"/>
-                    </Style>
-
-                    <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Content" Value="Browse"/>
-                        <Setter Property="ToolTip" Value="Open a window to browse for the file you want to view"/>
-                        <Setter Property="Command" Value="ApplicationCommands.Open"/>
-                    </Style>
-
-                    <Style x:Key="ReloadButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Content" Value="Reload"/>
-                        <Setter Property="ToolTip" Value="Load the terrain from the file at the given path into the view box"/>
-                        <Setter Property="Command" Value="NavigationCommands.Refresh"/>
-                    </Style>
-
-                    <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Content" Value="Save"/>
-                        <Setter Property="ToolTip" Value="Save the terrain currently shown in the view box to the given file. If no file is selected, you will be prompted to pick a save path."/>
-                        <Setter Property="Command" Value="ApplicationCommands.Save"/>
-                    </Style>
-                </StackPanel.Resources>
-
-                <StackPanel>
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ActiveSource}" Value="{x:Static local:TerrainSource.Raw}">
-                                    <Setter Property="Background" Value="Green"/>
-                                </DataTrigger>
-                            </Style.Triggers>
+        <TabControl>
+            <TabItem Header="File">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="4"/>
                         </Style>
-                    </StackPanel.Style>
 
-                    <TextBlock>Raw Terrain File</TextBlock>
-
-                    <TextBox Style="{StaticResource BrowseBox}" Text="{Binding RawFilePath}"/>
-
-                    <UniformGrid Rows="1" Margin="-4, 0">
-                        <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Style="{StaticResource BrowseButton}"/>
-                        <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Style="{StaticResource ReloadButton}"/>
-                        <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Command="ApplicationCommands.Save">Save</Button>
-                    </UniformGrid>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0 20">
-                    <TextBlock Text="Image Mode: " VerticalAlignment="Center"/>
-
-                    <UniformGrid Columns="1">
-                        <RadioButton IsChecked="{Binding ImageMode, Converter={x:Static local:EnumBooleanConverter.Instance}, ConverterParameter={x:Static local:TerrainImageMode.Gray16}}">16-bit Grayscale</RadioButton>
-                        <RadioButton IsChecked="{Binding ImageMode, Converter={x:Static local:EnumBooleanConverter.Instance}, ConverterParameter={x:Static local:TerrainImageMode.RedGreen8}}">8-bit Red/Green</RadioButton>
-                    </UniformGrid>
-                </StackPanel>
-
-                <StackPanel>
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ActiveSource}" Value="{x:Static local:TerrainSource.Image}">
-                                    <Setter Property="Background" Value="Green"/>
-                                </DataTrigger>
-                            </Style.Triggers>
+                        <Style x:Key="BrowseButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content" Value="Browse"/>
+                            <Setter Property="ToolTip" Value="Open a window to browse for the file you want to view"/>
+                            <Setter Property="Command" Value="ApplicationCommands.Open"/>
                         </Style>
-                    </StackPanel.Style>
 
-                    <TextBlock>Image File</TextBlock>
+                        <Style x:Key="ReloadButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content" Value="Reload"/>
+                            <Setter Property="ToolTip" Value="Load the terrain from the file at the given path into the view box"/>
+                            <Setter Property="Command" Value="NavigationCommands.Refresh"/>
+                        </Style>
 
-                    <TextBox Style="{StaticResource BrowseBox}" Text="{Binding ImageFilePath}"/>
+                        <Style x:Key="SaveButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content" Value="Save"/>
+                            <Setter Property="ToolTip" Value="Save the terrain currently shown in the view box to the given file. If no file is selected, you will be prompted to pick a save path."/>
+                            <Setter Property="Command" Value="ApplicationCommands.Save"/>
+                        </Style>
+                    </StackPanel.Resources>
 
-                    <UniformGrid Rows="1" Margin="-4, 0">
-                        <Button CommandParameter="{x:Static local:TerrainSource.Image}" Style="{StaticResource BrowseButton}"/>
-                        <Button CommandParameter="{x:Static local:TerrainSource.Image}" Style="{StaticResource ReloadButton}"/>
-                        <Button CommandParameter="{x:Static local:TerrainSource.Image}" Command="ApplicationCommands.Save">Save</Button>
-                    </UniformGrid>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActiveSource}" Value="{x:Static local:TerrainSource.Raw}">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <TextBlock>Raw Terrain File</TextBlock>
+
+                        <TextBox Style="{StaticResource BrowseBox}" Text="{Binding RawFilePath}"/>
+
+                        <UniformGrid Rows="1" Margin="-4, 0">
+                            <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Style="{StaticResource BrowseButton}"/>
+                            <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Style="{StaticResource ReloadButton}"/>
+                            <Button CommandParameter="{x:Static local:TerrainSource.Raw}" Command="ApplicationCommands.Save">Save</Button>
+                        </UniformGrid>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0 20">
+                        <TextBlock Text="Image Mode: " VerticalAlignment="Center"/>
+
+                        <UniformGrid Columns="1">
+                            <RadioButton IsChecked="{Binding ImageMode, Converter={x:Static local:EnumBooleanConverter.Instance}, ConverterParameter={x:Static local:TerrainImageMode.Gray16}}">16-bit Grayscale</RadioButton>
+                            <RadioButton IsChecked="{Binding ImageMode, Converter={x:Static local:EnumBooleanConverter.Instance}, ConverterParameter={x:Static local:TerrainImageMode.RedGreen8}}">8-bit Red/Green</RadioButton>
+                        </UniformGrid>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActiveSource}" Value="{x:Static local:TerrainSource.Image}">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <TextBlock>Image File</TextBlock>
+
+                        <TextBox Style="{StaticResource BrowseBox}" Text="{Binding ImageFilePath}"/>
+
+                        <UniformGrid Rows="1" Margin="-4, 0">
+                            <Button CommandParameter="{x:Static local:TerrainSource.Image}" Style="{StaticResource BrowseButton}"/>
+                            <Button CommandParameter="{x:Static local:TerrainSource.Image}" Style="{StaticResource ReloadButton}"/>
+                            <Button CommandParameter="{x:Static local:TerrainSource.Image}" Command="ApplicationCommands.Save">Save</Button>
+                        </UniformGrid>
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-        </DockPanel>
+            </TabItem>
 
-        <Image Grid.Column="1" Source="{Binding TerrainDisplay}"/>
+            <TabItem Header="Edit" IsSelected="{Binding EditTabActive}">
+                <TabItem.Style>
+                    <Style TargetType="TabItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding TerrainDisplay}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TabItem.Style>
+
+                <Grid Grid.IsSharedSizeScope="True" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition SharedSizeGroup="Controls"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock>Selector:</TextBlock>
+                    <StackPanel Grid.Column="2">
+                        <ComboBox ItemsSource="{Binding EditSelectorOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding ActiveEditorSelectorType}"/>
+                        <CheckBox IsChecked="{Binding ShowSelectorMask}">Show Selection Mask</CheckBox>
+                    </StackPanel>
+
+                    <ContentControl Grid.Row="1" Content="{Binding ActiveEditSelector}" Grid.ColumnSpan="3" Margin="0, 5">
+                        <ContentControl.Resources>
+                            <DataTemplate DataType="{x:Type edit:SingleLevelSelector}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition SharedSizeGroup="Controls"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock>Level:</TextBlock>
+                                    <edit:SampleBox Grid.Column="2" Value="{Binding Level}"/>
+                                </Grid>
+                            </DataTemplate>
+
+                            <DataTemplate DataType="{x:Type edit:RangeSelector}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition SharedSizeGroup="Controls"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock>Range:</TextBlock>
+
+                                    <Grid Grid.Column="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <edit:SampleBox Value="{Binding Min}"/>
+                                        <TextBlock Grid.Column="1" Text=" to "/>
+                                        <edit:SampleBox Grid.Column="2" Value="{Binding Max}"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ContentControl.Resources>
+                    </ContentControl>
+
+                    <TextBlock Grid.Row="2">Effect:</TextBlock>
+                    <ComboBox Grid.Row="2" Grid.Column="2" ItemsSource="{Binding EditEffectOptions}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding ActiveEditEffect}"/>
+
+                    <ContentControl Grid.Row="3" Grid.ColumnSpan="3" Content="{Binding ActiveEditEffect}">
+                        <ContentControl.Resources>
+                            <DataTemplate DataType="{x:Type edit:OffsetLevelEffect}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition SharedSizeGroup="Controls"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock>Offset:</TextBlock>
+                                    <TextBox Grid.Column="2" Text="{Binding Offset}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ContentControl.Resources>
+                    </ContentControl>
+
+                    <Button Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Center" Padding="5" Margin="5" Click="B_ApplyEffect_Click">Apply Effect</Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Image Grid.Column="1" Source="{Binding TerrainDisplay}" MouseMove="TerrainImage_MouseMove" MouseLeave="TerrainImage_MouseLeave" MouseLeftButtonDown="TerrainImage_MouseLeftButtonDown"/>
+        <Image Grid.Column="1" Source="{Binding TerrainEditMask}" IsHitTestVisible="False"/>
+
+        <TextBlock Grid.Row="1" Name="StatusText"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Name="MousePosText"/>
     </Grid>
 </Window>

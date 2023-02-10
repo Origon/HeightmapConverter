@@ -57,7 +57,7 @@ namespace HeightmapConverter
                 {
                     //The offset of the pixel
                     var posPixel = (x + (y * d));
-                    //The offset of the pixel in our 2-byte-per-pixel outpu array
+                    //The offset of the pixel in our 2-byte-per-pixel output array
                     var posOut = posPixel * 2;
                     //The offset of the pixel in our 2-byte-per-pixel input array, with 2-byte-per-line padding
                     var posIn = posOut + (y * 2);

@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="HeightmapConverter.Editing.SampleBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:edit="clr-namespace:HeightmapConverter.Editing">
+    
+    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type edit:SampleBox}}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBox Text="{Binding Value, TargetNullValue=''}"/>
+        <Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xEF3C;" Click="B_Sample_Click">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsAwaitingSample}" Value="True">
+                            <Setter Property="Background" Value="Gold"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>
