@@ -28,7 +28,8 @@ namespace HeightmapConverter
 
             EditEffectOptions = new Dictionary<string, SinglePixelEffect>()
             {
-                { "Offset Level", new OffsetLevelEffect() }
+                { "Offset Level", new OffsetLevelEffect() },
+                { "Scale Level", new ScaleLevelEffect() }
             };
         }
 

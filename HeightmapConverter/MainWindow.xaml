@@ -201,6 +201,18 @@
                                     <TextBox Grid.Column="2" Text="{Binding Offset}"/>
                                 </Grid>
                             </DataTemplate>
+                            <DataTemplate DataType="{x:Type edit:ScaleLevelEffect}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Labels"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition SharedSizeGroup="Controls"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock>Multiplier:</TextBlock>
+                                    <TextBox Grid.Column="2" Text="{Binding Multiplier}"/>
+                                </Grid>
+                            </DataTemplate>
                         </ContentControl.Resources>
                     </ContentControl>
 
